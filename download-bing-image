@@ -40,7 +40,7 @@ class TempDir(object):
 def main():
     parser = argparse.ArgumentParser(description="Download the current bing.com image.")
     parser.add_argument("destination", help="Destination directory.")
-    parser.add_argument("--set-desktop-picture", action="store_true", default=False, help="Set the OS X Desktop Picture.")
+    parser.add_argument("--set-desktop-picture", action="store_true", default=False, help="Set the OS X or Ubuntu desktop.")
     options = parser.parse_args()
 
     response = urllib.urlopen("%s%s" % (BASE_URL, "HPImageArchive.aspx?format=js&n=1&mkt=en-US&idx=0"))

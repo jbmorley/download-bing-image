@@ -1,7 +1,7 @@
 download-bing-image
 ===================
 
-Download the current [bing.com](https://bing.com) image to a directory, optionally setting it as the OS X Desktop Picture.
+Download the current [bing.com](https://bing.com) image to a directory, optionally setting it as the OS X or Ubuntu desktop.
 
 Usage
 -----
