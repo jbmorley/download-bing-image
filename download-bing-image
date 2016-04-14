@@ -11,6 +11,7 @@ import urllib
 BASE_URL = "http://www.bing.com/"
 
 OSASCRIPT_PATH = "/usr/bin/osascript"
+GSETTINGS_PATH = "/usr/bin/gsettings"
 
 SET_SCRIPT = """
 tell application "System Events"
@@ -68,7 +69,13 @@ def main():
         images.append(destination)
 
     if options.set_desktop_picture and images:
-        subprocess.check_call([OSASCRIPT_PATH, "-e", SET_SCRIPT % images[0]])
+        path = images[0]
+        if os.path.exists(OSASCRIPT_PATH):
+            subprocess.check_call([OSASCRIPT_PATH, "-e", SET_SCRIPT % path])
+        elif os.path.exists(GSETTINGS_PATH):
+            subprocess.check_call([GSETTINGS_PATH, "set", "org.gnome.desktop.background", "picture-uri", "file://%s" % (path)])
+        else:
+            exit("Unable to set desktop.")
 
     print "Complete. %d new file(s)." % (len(images))
 
