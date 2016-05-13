@@ -10,14 +10,6 @@ import urllib
 
 BASE_URL = "http://www.bing.com/"
 
-OSASCRIPT_PATH = "/usr/bin/osascript"
-GSETTINGS_PATH = "/usr/bin/gsettings"
-
-SET_SCRIPT = """
-tell application "System Events"
-    set picture of every desktop to POSIX file "%s"
-end tell
-"""
 
 
 class TempDir(object):
@@ -40,7 +32,10 @@ class TempDir(object):
 def main():
     parser = argparse.ArgumentParser(description="Download the current bing.com image.")
     parser.add_argument("destination", help="Destination directory.")
-    parser.add_argument("--set-desktop-picture", action="store_true", default=False, help="Set the OS X or Ubuntu desktop.")
+    parser.add_argument("--set-desktop-picture",
+                        action="store_true",
+                        default=False,
+                        help="Set the OS X or Ubuntu desktop.")
     options = parser.parse_args()
 
     response = urllib.urlopen("%s%s" % (BASE_URL, "HPImageArchive.aspx?format=js&n=1&mkt=en-US&idx=0"))
@@ -48,6 +43,7 @@ def main():
     paths = [image["url"] for image in contents["images"]]
 
     images = []
+    new_files = []
 
     destination_dir = os.path.abspath(options.destination)
     if not os.path.isdir(destination_dir):
@@ -58,6 +54,8 @@ def main():
         _, filename = os.path.split(path)
         destination = os.path.join(options.destination, filename)
 
+        images.append(destination)
+
         if os.path.exists(destination):
             continue
 
@@ -66,18 +64,17 @@ def main():
             urllib.urlretrieve(url, filename)
             shutil.move(filename, destination)
 
-        images.append(destination)
+        new_files.append(destination)
 
     if options.set_desktop_picture and images:
         path = images[0]
-        if os.path.exists(OSASCRIPT_PATH):
-            subprocess.check_call([OSASCRIPT_PATH, "-e", SET_SCRIPT % path])
-        elif os.path.exists(GSETTINGS_PATH):
-            subprocess.check_call([GSETTINGS_PATH, "set", "org.gnome.desktop.background", "picture-uri", "file://%s" % (path)])
-        else:
-            exit("Unable to set desktop.")
+        try:
+            from setwallpaper import set_wallpaper
+            set_wallpaper(path)
+        except ImportError as e:
+            exit("Unable to set desktop: %s" % e)
 
-    print "Complete. %d new file(s)." % (len(images))
+    print "Complete. %d new file(s)." % (len(new_files))
 
 if __name__ == "__main__":
-   main()
+    main()
