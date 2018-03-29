@@ -1,13 +1,14 @@
-#!/usr/bin/env python
+import importlib
 
 modules = ['osx', 'gnome']
 
 setwallpaper_module = None
 for module in modules:
     try:
-        setwallpaper_module = __import__(module, globals(), locals(), [], -1)
+        setwallpaper_module = importlib.import_module(f"setwallpaper.{module}")
         break
-    except ImportError:
+    except ImportError as e:
+        print(e)
         continue
 
 if setwallpaper_module is None:

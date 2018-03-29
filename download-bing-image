@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import json
@@ -6,10 +6,9 @@ import os
 import shutil
 import subprocess
 import tempfile
-import urllib
+import urllib.request
 
 BASE_URL = "http://www.bing.com/"
-
 
 
 class TempDir(object):
@@ -38,7 +37,7 @@ def main():
                         help="Set the OS X or Ubuntu desktop.")
     options = parser.parse_args()
 
-    response = urllib.urlopen("%s%s" % (BASE_URL, "HPImageArchive.aspx?format=js&n=1&mkt=en-US&idx=0"))
+    response = urllib.request.urlopen("%s%s" % (BASE_URL, "HPImageArchive.aspx?format=js&n=1&mkt=en-US&idx=0"))
     contents = json.loads(response.read())
     paths = [image["url"] for image in contents["images"]]
 
@@ -59,9 +58,9 @@ def main():
         if os.path.exists(destination):
             continue
 
-        print "Downloading '%s'..." % (filename)
+        print(f"Downloading '{filename}'...")
         with TempDir():
-            urllib.urlretrieve(url, filename)
+            urllib.request.urlretrieve(url, filename)
             shutil.move(filename, destination)
 
         new_files.append(destination)
@@ -74,7 +73,7 @@ def main():
         except ImportError as e:
             exit("Unable to set desktop: %s" % e)
 
-    print "Complete. %d new file(s)." % (len(new_files))
+    print("Complete. %d new file(s)." % (len(new_files)))
 
 if __name__ == "__main__":
     main()

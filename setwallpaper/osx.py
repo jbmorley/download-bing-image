@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-
 import objc
+
 from CoreFoundation import CFUUIDCreateFromString
 from Foundation import NSBundle
 
