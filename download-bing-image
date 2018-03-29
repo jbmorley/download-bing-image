@@ -6,9 +6,10 @@ import os
 import shutil
 import subprocess
 import tempfile
+import urllib.parse
 import urllib.request
 
-BASE_URL = "http://www.bing.com/"
+import requests
 
 
 class TempDir(object):
@@ -34,11 +35,14 @@ def main():
     parser.add_argument("--set-desktop-picture",
                         action="store_true",
                         default=False,
-                        help="Set the OS X or Ubuntu desktop.")
+                        help="set the OS X or Ubuntu desktop")
+    parser.add_argument("--url",
+                        default="https://www.bing.com",
+                        help="URL to use (e.g., https://www.bing.com)")
     options = parser.parse_args()
 
-    response = urllib.request.urlopen("%s%s" % (BASE_URL, "HPImageArchive.aspx?format=js&n=1&mkt=en-US&idx=0"))
-    contents = json.loads(response.read())
+    url = urllib.parse.urljoin(options.url, "HPImageArchive.aspx?format=js&n=1&idx=0")
+    contents = requests.get(url).json()
     paths = [image["url"] for image in contents["images"]]
 
     images = []
@@ -49,7 +53,7 @@ def main():
         exit("Failed. '%s' is not a directory." % (destination_dir))
 
     for path in paths:
-        url = "%s%s" % (BASE_URL, path)
+        url = "%s%s" % (options.url, path)
         _, filename = os.path.split(path)
         destination = os.path.join(options.destination, filename)
 
