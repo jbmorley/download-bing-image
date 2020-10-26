@@ -3,6 +3,14 @@ download-bing-image
 
 Download the current [bing.com](https://bing.com) image to a directory, optionally setting it as the OS X or Ubuntu desktop.
 
+## Installation
+
+```bash
+git clone git@github.com:jbmorley/download-bing-image.git
+cd download-bing-image
+pipenv install
+```
+
 Usage
 -----
 
@@ -20,3 +28,4 @@ For example,
 ```cron
 0 * * * * /path/to/download-bing-image --set-desktop-picture /Users/jbmorley/Pictures > /dev/null
 ```
+
