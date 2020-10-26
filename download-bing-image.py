@@ -54,7 +54,14 @@ def main():
 
     for path in paths:
         url = "%s%s" % (options.url, path)
+
+        # Deterime an appropriate filename; check to see if the destination URL matches an expected format and if so,
+        # extract the identifier.
         _, filename = os.path.split(path)
+        details = urllib.parse.urlparse(path)
+        if details.path == "/th":
+            filename = urllib.parse.parse_qs(details.query)['id'][0]
+
         destination = os.path.join(options.destination, filename)
 
         images.append(destination)
