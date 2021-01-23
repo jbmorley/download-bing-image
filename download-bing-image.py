@@ -19,7 +19,13 @@ def main():
     parser.add_argument("--set-desktop-picture",
                         action="store_true",
                         default=False,
-                        help="set the OS X or Ubuntu desktop")
+                        dest="set",
+                        help="set the macOS or Gnome desktop")
+    parser.add_argument("--set", "-s",
+                        action="store_true",
+                        default=False,
+                        dest="set",
+                        help="set the macOS or Gnome desktop")
     parser.add_argument("--url",
                         default="https://www.bing.com",
                         help="URL to use (e.g., https://www.bing.com)")
@@ -61,7 +67,7 @@ def main():
 
         new_files.append(destination)
 
-    if options.set_desktop_picture and images:
+    if options.set and images:
         path = os.path.abspath(images[0])
         try:
             from setwallpaper import set_wallpaper
