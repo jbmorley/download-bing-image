@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import platform
 import shutil
 import subprocess
 import tempfile
@@ -10,23 +11,6 @@ import urllib.parse
 import urllib.request
 
 import requests
-
-
-class TempDir(object):
-
-    def __init__(self):
-        self.pwd = None
-        self.path = None
-
-    def __enter__(self):
-        self.pwd = os.getcwd()
-        self.path = tempfile.mkdtemp()
-        os.chdir(self.path)
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        os.chdir(self.pwd)
-        shutil.rmtree(self.path)
 
 
 def main():
@@ -70,9 +54,10 @@ def main():
             continue
 
         print(f"Downloading '{filename}'...")
-        with TempDir():
-            urllib.request.urlretrieve(url, filename)
-            shutil.move(filename, destination)
+        with tempfile.TemporaryDirectory() as p:
+            temporary_path = os.path.join(p, filename)
+            urllib.request.urlretrieve(url, temporary_path)
+            shutil.move(temporary_path, destination)
 
         new_files.append(destination)
 
