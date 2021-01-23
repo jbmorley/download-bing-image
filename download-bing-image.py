@@ -62,7 +62,7 @@ def main():
         new_files.append(destination)
 
     if options.set_desktop_picture and images:
-        path = images[0]
+        path = os.path.abspath(images[0])
         try:
             from setwallpaper import set_wallpaper
             set_wallpaper(path)
