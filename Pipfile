@@ -7,7 +7,7 @@ verify_ssl = true
 [packages]
 
 requests = "*"
-pyobjc = "*"
+pyobjc = {version = "*", sys_platform = "== 'darwin'"}
 
 
 [requires]
