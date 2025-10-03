@@ -1,5 +1,8 @@
-download-bing-image
-===================
+> [!IMPORTANT]
+> 
+> This project has been archived and will not be maintained or developed further.
+
+# download-bing-image
 
 Download the current [bing.com](https://bing.com) image to a directory, optionally setting it as the OS X or Ubuntu desktop.
 
